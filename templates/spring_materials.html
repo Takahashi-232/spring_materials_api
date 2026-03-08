@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ばね材料データベース</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 40px;
+            line-height: 1.6;
+        }
+        h2 {
+            margin-top: 50px;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 4px;
+        }
+        table {
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 40px;
+            width: auto;
+        }
+        th, td {
+            border: 1px solid #999;
+            padding: 6px 10px;
+            text-align: right;
+            white-space: nowrap;
+        }
+        th:first-child, td:first-child {
+            text-align: left;
+            background: #fafafa;
+        }
+        th {
+            background: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+
+<h1>ばね材料データベース</h1>
+
+
+<!-- ====================================================== -->
+<!-- 1. 縦弾性係数（MPa） -->
+<!-- ====================================================== -->
+<h2>縦弾性係数（MPa）</h2>
+
+<table>
+    <tr>
+        <th>項目</th>
+        {% for name, mat in spring_materials.items() %}
+            <th>{{ name }}</th>
+        {% endfor %}
+    </tr>
+    <tr>
+        <td>縦弾性係数（MPa）</td>
+        {% for name, mat in spring_materials.items() %}
+            <td>{{ mat.E }}</td>
+        {% endfor %}
+    </tr>
+</table>
+
+
+<!-- ====================================================== -->
+<!-- 2. 許容曲げ応力（MPa） -->
+<!-- ====================================================== -->
+<h2>許容曲げ応力（MPa）</h2>
+
+<table>
+    <tr>
+        <th>線径 d (mm)</th>
+        {% for name, mat in spring_materials.items() %}
+            <th>{{ name }}</th>
+        {% endfor %}
+    </tr>
+
+    {% set all_d = [] %}
+    {% for name, mat in spring_materials.items() %}
+        {% for d in mat.allowable_stress.keys() %}
+            {% if d not in all_d %}
+                {% set _ = all_d.append(d) %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+    {% set all_d = all_d | sort %}
+
+    {% for d in all_d %}
+    <tr>
+        <td>{{ d }}</td>
+        {% for name, mat in spring_materials.items() %}
+            <td>
+                {% if d in mat.allowable_stress %}
+                    {{ mat.allowable_stress[d] }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+
+
+<!-- ====================================================== -->
+<!-- 3. 引張強さ規格値の最小値（MPa） -->
+<!-- ====================================================== -->
+<h2>引張強さ規格値の最小値（MPa）</h2>
+
+<table>
+    <tr>
+        <th>線径 d (mm)</th>
+        {% for name, mat in spring_materials.items() %}
+            <th>{{ name }}</th>
+        {% endfor %}
+    </tr>
+
+    {% set all_d = [] %}
+    {% for name, mat in spring_materials.items() %}
+        {% for d in mat.tensile_strength_min.keys() %}
+            {% if d not in all_d %}
+                {% set _ = all_d.append(d) %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+    {% set all_d = all_d | sort %}
+
+    {% for d in all_d %}
+    <tr>
+        <td>{{ d }}</td>
+        {% for name, mat in spring_materials.items() %}
+            <td>
+                {% if d in mat.tensile_strength_min %}
+                    {{ mat.tensile_strength_min[d] }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+
+
+<!-- ====================================================== -->
+<!-- 4. 線径公差（mm） -->
+<!-- ====================================================== -->
+<h2>線径公差（mm）</h2>
+
+<table>
+    <tr>
+        <th>線径 d (mm)</th>
+        {% for name, mat in spring_materials.items() %}
+            <th>{{ name }}</th>
+        {% endfor %}
+    </tr>
+
+    {% set all_d = [] %}
+    {% for name, mat in spring_materials.items() %}
+        {% for d in mat.diameter_tolerance.keys() %}
+            {% if d not in all_d %}
+                {% set _ = all_d.append(d) %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+    {% set all_d = all_d | sort %}
+
+    {% for d in all_d %}
+    <tr>
+        <td>{{ d }}</td>
+        {% for name, mat in spring_materials.items() %}
+            <td>
+                {% if d in mat.diameter_tolerance %}
+                    ±{{ mat.diameter_tolerance[d] }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>

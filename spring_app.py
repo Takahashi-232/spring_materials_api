@@ -1,17 +1,17 @@
 from flask import Flask, render_template
+from flask_cors import CORS
 from materials.spring_material_db import SpringMaterialDB
 
 app = Flask(__name__)
+CORS(app)  # ← これが重要！
 
 # --- ばね材料データベースを読み込む ---
 db = SpringMaterialDB()
-spring_materials = db.DATA   # ← ここを DATA に変更！
-
+spring_materials = db.DATA
 
 @app.get("/")
 def index():
     return "Flask が動いています！"
-
 
 @app.get("/spring_materials")
 def spring_materials_page():
@@ -19,7 +19,6 @@ def spring_materials_page():
         "spring_materials.html",
         spring_materials=spring_materials
     )
-
 
 import os
 

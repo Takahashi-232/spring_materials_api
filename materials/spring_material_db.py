@@ -282,7 +282,8 @@ class SpringMaterialDB:
                8.5: 0.035, 9.0: 0.035, 9.5: 0.035, 10.0: 0.035
              }
             },
-                def get_E(self, material):
+               
+    def get_E(self, material):
         return self.materials[material]["E"]
 
     def get_G(self, material):

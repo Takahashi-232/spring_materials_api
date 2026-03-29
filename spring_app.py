@@ -7,7 +7,7 @@ CORS(app)  # ← これが重要！
 
 # --- ばね材料データベースを読み込む ---
 db = SpringMaterialDB()
-spring_materials = db.DATA
+spring_materials = db.materials
 
 @app.get("/")
 def index():
